@@ -15,18 +15,11 @@ class Prospect: Identifiable, Codable {
 }
 
 @MainActor class Prospects: ObservableObject {
-    @Published private (set) var people: [Prospect]
+    @Published private (set) var people: [Prospect] = []
     let savedKey = "SavedData"
     
     init() {
-        if let data = UserDefaults.standard.data(forKey: savedKey) {
-            if let decoded = try? JSONDecoder().decode([Prospect].self, from: data) {
-                people = decoded
-                return
-            }
-        }
-        
-        people = []
+        load()
     }
     
     func add(_ prospect: Prospect) {
@@ -41,8 +34,15 @@ class Prospect: Identifiable, Codable {
     }
     
     private func save() {
-        if let encodedData = try? JSONEncoder().encode(people) {
-            UserDefaults.standard.set(encodedData, forKey: savedKey)
+        FileManager()
+            .saveInDocuments(to: savedKey, data: people)
+    }
+    
+    private func load() {
+        if FileManager().fileInDocumentsExists(savedKey) {
+            let loadedContacts: [Prospect] = FileManager()
+                .loadFromDocuments(savedKey)
+            people = loadedContacts
         }
     }
 }

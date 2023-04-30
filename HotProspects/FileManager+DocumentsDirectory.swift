@@ -23,7 +23,7 @@ extension FileManager {
         }
     }
     
-    func loadFromDocuments<T: Decodable>(_ fileName: String, fallback: T) -> T {
+    func loadFromDocuments<T: Decodable>(_ fileName: String) -> T {
         let url = FileManager.documentsDirectory.appendingPathComponent(fileName)
         
         do {
@@ -32,8 +32,8 @@ extension FileManager {
             }
             
             guard let data = try? Data(contentsOf: url) else {
-                try FileManager.default.removeItem(atPath: url.path())
-                return fallback
+//                try FileManager.default.removeItem(atPath: url.path())
+                fatalError("Code not decode data for given type, removed the data")
             }
             let decodedData = try JSONDecoder().decode(T.self, from: data)
             
@@ -41,5 +41,9 @@ extension FileManager {
         } catch {
             fatalError("Failed to load data from documents directory")
         }
+    }
+    
+    func fileInDocumentsExists(_ fileName: String) -> Bool {
+        return fileExists(atPath: FileManager.documentsDirectory.appendingPathComponent(fileName).path())
     }
 }
