@@ -32,8 +32,7 @@ extension FileManager {
             }
             
             guard let data = try? Data(contentsOf: url) else {
-//                try FileManager.default.removeItem(atPath: url.path())
-                fatalError("Code not decode data for given type, removed the data")
+                fatalError("Code not decode data for given type")
             }
             let decodedData = try JSONDecoder().decode(T.self, from: data)
             
