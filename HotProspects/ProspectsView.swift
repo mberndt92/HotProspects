@@ -46,11 +46,18 @@ struct ProspectsView: View {
         NavigationView {
             List {
                 ForEach(filteredProspects) { prospect in
-                    VStack(alignment: .leading) {
-                        Text(prospect.name)
-                            .font(.headline)
-                        Text(prospect.email)
-                            .foregroundColor(.secondary)
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(prospect.name)
+                                .font(.headline)
+                            Text(prospect.email)
+                                .foregroundColor(.secondary)
+                        }
+                        if (filter == .none) {
+                            Spacer()
+                            Image(systemName: calculateSFSymbol(prospect: prospect))
+                                .foregroundColor(prospect.isContacted ? .green : .yellow)
+                        }
                     }
                     .swipeActions {
                         if prospect.isContacted {
@@ -139,6 +146,10 @@ struct ProspectsView: View {
                 }
             }
         }
+    }
+    
+    private func calculateSFSymbol(prospect: Prospect) -> String {
+        return prospect.isContacted ? "person.fill.checkmark" : "person.fill.questionmark"
     }
 }
 
