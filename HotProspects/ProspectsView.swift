@@ -64,7 +64,7 @@ struct ProspectsView: View {
                             Button {
                                 prospects.toggle(prospect)
                             } label: {
-                                Label("Mark uncontacted", systemImage: "person .crop.circle.fill.badge.checkmark")
+                                Label("Mark contacted", systemImage: "person .crop.circle.fill.badge.checkmark")
                             }
                             .tint(.green)
                             Button {
