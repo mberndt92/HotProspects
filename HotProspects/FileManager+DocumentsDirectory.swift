@@ -30,10 +30,7 @@ extension FileManager {
             guard fileExists(atPath: url.path) else {
                 fatalError("file not found")
             }
-            
-            guard let data = try? Data(contentsOf: url) else {
-                fatalError("Code not decode data for given type")
-            }
+            let data = try Data(contentsOf: url)
             let decodedData = try JSONDecoder().decode(T.self, from: data)
             
             return decodedData

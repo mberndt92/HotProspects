@@ -9,8 +9,10 @@ import SwiftUI
 
 class Prospect: Identifiable, Codable {
     var id = UUID()
-    var name = "Anonymous"
+    var dateAdded = Date.now
     var email = ""
+    var name = "Anonymous"
+    
     fileprivate (set) var isContacted = false
 }
 
@@ -44,5 +46,29 @@ class Prospect: Identifiable, Codable {
                 .loadFromDocuments(savedKey)
             people = loadedContacts
         }
+    }
+}
+
+extension Prospect {
+    private static var exampleProspects = [
+        "Paul Hudson": "paul@hackingwithswift.com",
+        "Harry Potter": "harry@hogwarts.com",
+        "Hermione Granger": "hermione@icloud.com",
+        "Ron Weasley": "ron@weasley.com"
+    ]
+    
+    
+    static var example: Prospect {
+        let prospect = Prospect()
+        
+        let example = exampleProspects.randomElement()!
+        prospect.name = example.key
+        prospect.email = example.value
+        
+        return prospect
+    }
+    
+    func asSimulatedData() -> String {
+        return "\(name)\n\(email)"
     }
 }

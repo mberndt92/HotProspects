@@ -17,11 +17,19 @@ struct ProspectsView: View {
         case uncontacted
     }
     
+    enum SortingType {
+        case name
+        case recent
+    }
+    
     @EnvironmentObject var prospects: Prospects
     
     @State private var isShowingQRCodeScanner = false
+    @State private var isShowingFilterView = false
     
+    @State private var sorting: SortingType = .recent
     private (set) var filter: FilterType = .none
+    
     
     var title: String {
         switch filter {
@@ -45,7 +53,7 @@ struct ProspectsView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(filteredProspects) { prospect in
+                ForEach(sortedProspects(prospects: filteredProspects)) { prospect in
                     HStack {
                         VStack(alignment: .leading) {
                             Text(prospect.name)
@@ -86,14 +94,29 @@ struct ProspectsView: View {
             }
             .navigationTitle(title)
             .toolbar {
-                Button {
-                    isShowingQRCodeScanner = true
-                } label: {
-                    Label("Scan", systemImage: "qrcode.viewfinder")
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        isShowingFilterView = true
+                    } label: {
+                        Label("Filter", systemImage: "arrow.up.arrow.down")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        isShowingQRCodeScanner = true
+                    } label: {
+                        Label("Scan", systemImage: "qrcode.viewfinder")
+                    }
                 }
             }
             .sheet(isPresented: $isShowingQRCodeScanner) {
-                CodeScannerView(codeTypes: [.qr], simulatedData: "Paul Hudson\npaul@hackingwithswift.com", completion: handleScan)
+                CodeScannerView(codeTypes: [.qr], simulatedData: Prospect.example.asSimulatedData(), completion: handleScan)
+            }
+            .confirmationDialog("Change sorting", isPresented: $isShowingFilterView) {
+                Button("by name") { sorting = .name }
+                Button("by recent") { sorting = .recent }
+            } message: {
+                Text("Select a sort order")
             }
         }
     }
@@ -145,6 +168,17 @@ struct ProspectsView: View {
                     }
                 }
             }
+        }
+    }
+    
+    private func sortedProspects(prospects: [Prospect]) -> [Prospect] {
+        switch sorting {
+        case .name: return prospects.sorted { a, b in
+            return a.name < b.name
+        }
+        case .recent: return prospects.sorted { a, b in
+            return a.dateAdded < b.dateAdded
+        }
         }
     }
     
