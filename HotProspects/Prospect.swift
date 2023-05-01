@@ -18,7 +18,7 @@ class Prospect: Identifiable, Codable {
 
 @MainActor class Prospects: ObservableObject {
     @Published private (set) var people: [Prospect] = []
-    let savedKey = "SavedData"
+    let savedKey = "Save"
     
     init() {
         load()
@@ -51,12 +51,20 @@ class Prospect: Identifiable, Codable {
 
 extension Prospect {
     private static var exampleProspects = [
-        "Paul Hudson": "paul@hackingwithswift.com",
-        "Harry Potter": "harry@hogwarts.com",
-        "Hermione Granger": "hermione@icloud.com",
-        "Ron Weasley": "ron@weasley.com"
+            "Harry Potter": "harry@hogwarts.edu",
+            "Hermione Granger": "hermione@hogwarts.edu",
+            "Ron Weasley": "ron@weasley.com",
+            "Ginny Weasley": "ginny@weasley.com",
+            "Fred Weasley": "fred@weasley.com",
+            "George Weasley": "george@weasley.com",
+            "Molly Weasley": "molly@weasley.com",
+            "Arthur Weasley": "arthur@weasley.com",
+            "Albus Dumbledore": "albus@hogwarts.edu",
+            "Severus Snape": "severus@hogwarts.edu",
+            "Draco Malfoy": "draco@malfoy.com",
+            "Bellatrix Lestrange": "bellatrix@death-eaters.com",
+            "Lord Voldemort": "voldemort@death-eaters.com"
     ]
-    
     
     static var example: Prospect {
         let prospect = Prospect()
